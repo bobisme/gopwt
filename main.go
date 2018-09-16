@@ -1,6 +1,7 @@
 package gopwt
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"go/build"
@@ -9,6 +10,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 	"syscall"
 
 	"github.com/ToQoz/gopwt/translator"
@@ -54,7 +56,7 @@ func goMod() string {
 		return ""
 	}
 	// module github.com/something/something
-	if !strings.HasPrefix(line, "module ")
+	if !strings.HasPrefix(line, "module ") {
 		return ""
 	}
 	return string(line[8:])
