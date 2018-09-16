@@ -56,7 +56,7 @@ func goMod() string {
 		return ""
 	}
 	// module github.com/something/something
-	if !strings.HasPrefix(line, "module ") {
+	if !strings.HasPrefix(string(line), "module ") {
 		return ""
 	}
 	return string(line[8:])
