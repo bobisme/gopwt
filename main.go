@@ -41,6 +41,25 @@ func Empower() {
 	}
 	os.Exit(0)
 }
+
+func goMod() string {
+	file, err := os.Open("go.mod")
+	defer file.Close()
+	if err != nil {
+		return ""
+	}
+	reader := bufio.NewReader(file)
+	line, _, err := reader.ReadLine()
+	if err != nil {
+		return ""
+	}
+	// module github.com/something/something
+	if !strings.HasPrefix(line, "module ")
+		return ""
+	}
+	return string(line[8:])
+}
+
 func doMain() error {
 	if !flag.Parsed() {
 		flag.Parse()
@@ -58,6 +77,7 @@ func doMain() error {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		setTermCols()
 	}
+
 	if wd, err := os.Getwd(); err == nil {
 		translator.WorkingDir(wd + string(filepath.Separator))
 	}
@@ -92,7 +112,10 @@ func runTest(gopath string, importpath string, stdout, stderr io.Writer) error {
 	if verbose {
 		cmd.Args = append(cmd.Args, "-v")
 	}
-	cmd.Dir = path.Join(gopath, "src", importpath)
+
+	if mod := goMod(); mod == "" {
+		cmd.Dir = path.Join(gopath, "src", importpath)
+	}
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 	return cmd.Run()
