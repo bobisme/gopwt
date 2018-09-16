@@ -16,7 +16,7 @@ type testingInterface interface {
 
 // OK assert given bool is true.
 // This will be translate to `translatedassert.OK` by gopwt.
-func OK(t *testing.T, ok bool, messages ...string) {
+func OK(t testingInterface, ok bool, messages ...string) {
 	_ok(t, ok, callerLine(1), messages...)
 }
 
